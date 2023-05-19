@@ -9,7 +9,7 @@ function Login() {
         </div>
 
         <div className="form-container">
-          <form className="login-form" method="post" action="/login">
+          <form className="login-form" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="email" className="form-label">
                 Email address
@@ -22,6 +22,7 @@ function Login() {
                   required
                   className="email"
                   autoComplete="email"
+                  disabled={loading}
                 />
               </div>
             </div>
@@ -44,12 +45,13 @@ function Login() {
                   maxLength={20}
                   required
                   className="password"
+                  disabled={loading}
                 />
               </div>
             </div>
             <div className="submit-button-box">
               <button type="submit" className="submit-button">
-                Sign in
+                Sign in {loading && <Loader />}
               </button>
             </div>
           </form>
@@ -60,6 +62,9 @@ function Login() {
             </Link>
           </p>
         </div>
+        {error && (
+          <p className="text-red-500 mt-4">Invalid username or password</p>
+        )}
       </div>
     </div>
   );
