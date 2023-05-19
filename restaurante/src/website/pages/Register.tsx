@@ -1,6 +1,38 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function Register() {
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const form = event.target as HTMLFormElement;
+    const firstName = form.firstName.value;
+    const lastName = form.lastName.value;
+    const email = form.email.value;
+    const password = form.password.value;
+
+    try {
+      const response = await axios.post("http://localhost:3001/register", {
+        firstName,
+        lastName,
+        email,
+        password,
+      });
+
+      const token = response.data.token;
+
+      console.log(response.data);
+
+      localStorage.setItem("token", token);
+
+      navigate("/profile");
+    } catch (error) {
+      console.error("Registration failed:", error);
+    }
+  };
+
   return (
     <div className="login-container">
       <div className="login-box">
@@ -9,7 +41,7 @@ function Register() {
         </div>
 
         <div className="form-container">
-          <form className="login-form" method="post" action="/login">
+          <form className="login-form" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="firstName" className="form-label">
                 Nome
@@ -68,7 +100,7 @@ function Register() {
             </div>
             <div className="submit-button-box">
               <button type="submit" className="submit-button">
-                Sign in
+                Sign up
               </button>
             </div>
           </form>

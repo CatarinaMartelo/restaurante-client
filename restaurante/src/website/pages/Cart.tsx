@@ -1,5 +1,5 @@
-function Orders() {
+function Cart() {
   return <></>;
 }
 
-export default Orders;
+export default Cart;
