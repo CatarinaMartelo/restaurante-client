@@ -40,7 +40,7 @@ function Bookings() {
               <input
                 id="date"
                 name="date"
-                type="text"
+                type="date"
                 autoComplete="off"
                 required
                 className="date"

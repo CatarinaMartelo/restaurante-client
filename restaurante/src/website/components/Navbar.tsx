@@ -19,6 +19,11 @@ const Navbar = () => {
         <li>
           <a href="/login">Login</a>
         </li>
+        <li>
+          <a href="/profile">
+            <i className="fa-solid fa-user"></i>
+          </a>
+        </li>
       </ul>
     </nav>
   );

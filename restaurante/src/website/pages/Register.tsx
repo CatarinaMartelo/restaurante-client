@@ -1,43 +1,54 @@
+import { FormEvent, useEffect, useState } from "react";
+import Loader from "../components/Loader";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useApp } from "../hooks/useApp";
 
 function Register() {
+  const { isLoggedIn, attemptRegister } = useApp();
   const navigate = useNavigate();
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    isLoggedIn && navigate("/");
+  }, [isLoggedIn]);
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setError(false);
+    setLoading(true);
 
-    const form = event.target as HTMLFormElement;
-    const firstName = form.firstName.value;
-    const lastName = form.lastName.value;
-    const email = form.email.value;
-    const password = form.password.value;
+    const target = event.target as HTMLFormElement;
+    const firstName = target.elements.namedItem(
+      "firstName"
+    ) as HTMLInputElement;
+    const lastName = target.elements.namedItem("lastName") as HTMLInputElement;
+    const email = target.elements.namedItem("email") as HTMLInputElement;
+    const password = target.elements.namedItem("password") as HTMLInputElement;
 
-    try {
-      const response = await axios.post("http://localhost:3001/register", {
-        firstName,
-        lastName,
-        email,
-        password,
-      });
-
-      const token = response.data.token;
-
-      console.log(response.data);
-
-      localStorage.setItem("token", token);
-
-      navigate("/profile");
-    } catch (error) {
-      console.error("Registration failed:", error);
-    }
-  };
+    console.log(email.value, password.value);
+    attemptRegister({
+      email: email.value,
+      password: password.value,
+      firstName: firstName.value,
+      lastName: lastName.value,
+    })
+      .then(() => {
+        navigate("/profile");
+      })
+      .catch((e) => {
+        setError(true);
+        console.log(e);
+      })
+      .finally(() => setLoading(false));
+  }
 
   return (
     <div className="login-container">
       <div className="login-box">
         <div className="sign-in">
-          <h2 className="sign-in-text">Create your account</h2>
+          <h2 className="sign-in-text">Crie a sua conta</h2>
         </div>
 
         <div className="form-container">
@@ -53,6 +64,7 @@ function Register() {
                 autoComplete="off"
                 required
                 className="firstName"
+                disabled={loading}
               />
               <label htmlFor="lastName" className="form-label">
                 Apelido
@@ -64,6 +76,7 @@ function Register() {
                 autoComplete="off"
                 required
                 className="lastName"
+                disabled={loading}
               />
               <label htmlFor="email" className="form-label">
                 Email
@@ -76,6 +89,7 @@ function Register() {
                   autoComplete="email"
                   required
                   className="email"
+                  disabled={loading}
                 />
               </div>
             </div>
@@ -95,12 +109,13 @@ function Register() {
                   maxLength={20}
                   required
                   className="password"
+                  disabled={loading}
                 />
               </div>
             </div>
             <div className="submit-button-box">
               <button type="submit" className="submit-button">
-                Sign up
+                Registar {loading && <Loader />}
               </button>
             </div>
           </form>

@@ -220,7 +220,7 @@ a:hover {
 
 .submit-button {
   display: flex;
-  margin: 20px 0; /* Add margin top and bottom */
+  margin: 30px 0; /* Add margin top and bottom */
 }
 
 /* ----- MENU ----- */
@@ -279,4 +279,54 @@ tr:nth-child(even) {
 
 .menu-text {
   text-align: center;
+}
+
+/* ----- PROFILE ----- */
+
+h1,
+h2 {
+  text-align: center;
+}
+
+.profile {
+  background-color: #ffffff88;
+  border-radius: 5px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+form {
+  display: grid;
+  gap: 10px;
+}
+
+label {
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"] {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+button[type="submit"] {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover {
+  background-color: #45a049;
 }
