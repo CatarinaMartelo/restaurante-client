@@ -12,7 +12,7 @@ function Login() {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    isLoggedIn && navigate("/");
+    isLoggedIn && navigate("/profile");
   }, [isLoggedIn]);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -26,7 +26,7 @@ function Login() {
 
     attemptLogin(email.value, password.value)
       .then(() => {
-        navigate("/");
+        navigate("/profile");
       })
       .catch((e) => {
         setError(true);
@@ -64,9 +64,6 @@ function Login() {
                 <label htmlFor="password" className="form-label">
                   Palavra-passe
                 </label>
-                <a href="#" className="forgot-password-link">
-                  Esqueceu a palavra-passe?
-                </a>
               </div>
               <div className="input-container">
                 <input
@@ -80,6 +77,11 @@ function Login() {
                   className="password"
                   disabled={loading}
                 />
+                <div>
+                  <a href="#" className="forgot-password-link">
+                    Esqueceu a palavra-passe?
+                  </a>
+                </div>
               </div>
             </div>
             <div className="submit-button-box">

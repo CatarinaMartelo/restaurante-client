@@ -1,11 +1,18 @@
 import { createContext, ReactNode, useEffect, useReducer } from "react";
 import { reducer } from "../reducer/appReducer";
 import { login, profile, register, RegisterData } from "../services/auth";
-import { User } from "../models/user";
+import { Profile, User } from "../models/user";
 
 export type AppState = {
   user?: User;
+  profile?: Profile;
   isLoggedIn: boolean;
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  birthday?: string;
+  vatNumber?: string;
+  telephone?: number;
 };
 
 export type AppAction = {
@@ -26,6 +33,12 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
   const initialState: AppState = {
     user: undefined,
     isLoggedIn: false,
+    firstName: undefined,
+    lastName: undefined,
+    email: undefined,
+    birthday: undefined,
+    vatNumber: undefined,
+    telephone: undefined,
   };
 
   const [appState, dispatch] = useReducer(reducer, initialState);
@@ -56,6 +69,7 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
       localStorage.setItem("token", token);
       const user = await profile();
       dispatch({ type: "LOGIN", payload: user });
+      dispatch({ type: "SET_PROFILE_DATA", payload: user });
     }
   }
 

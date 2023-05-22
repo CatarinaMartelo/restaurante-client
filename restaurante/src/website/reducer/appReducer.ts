@@ -12,6 +12,26 @@ export function reducer(state: AppState, { type, payload }: AppAction) {
     case "CLEAR_CART":
       localStorage.removeItem("cart");
       return { ...state, cart: [] };
+    case "SET_PROFILE_DATA": // New action type
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          firstName: payload.firstName,
+          lastName: payload.lastName,
+          email: payload.email,
+        },
+      };
+    case "UPDATE_PROFILE_DATA":
+      return {
+        ...state,
+        profile: {
+          ...state.profile,
+          birthday: payload.birthday,
+          vatNumber: payload.vatNumber,
+          telephone: payload.telephone,
+        },
+      };
     default:
       return state;
   }

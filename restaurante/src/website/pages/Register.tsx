@@ -2,6 +2,7 @@ import { FormEvent, useEffect, useState } from "react";
 import Loader from "../components/Loader";
 import { Link, useNavigate } from "react-router-dom";
 import { useApp } from "../hooks/useApp";
+import Profile from "./Profile";
 
 function Register() {
   const { isLoggedIn, attemptRegister } = useApp();

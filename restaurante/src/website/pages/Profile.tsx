@@ -1,82 +1,36 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
+import { AppContext } from "../context/AppContext";
+import { Link } from "react-router-dom";
 
-function Profile() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [birthday, setBirthday] = useState("");
-  const [phone, setPhone] = useState("");
-  const [vatNumber, setVatNumber] = useState("");
-
-  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const formData = new FormData(e.currentTarget);
-    const firstNameValue = formData.get("firstName") as string;
-    const lastNameValue = formData.get("lastName") as string;
-    const emailValue = formData.get("email") as string;
-    const birthdayValue = formData.get("birthday") as string;
-    const phoneValue = formData.get("phone") as string;
-    const vatNumberValue = formData.get("vatNumber") as string;
-
-    // Perform any necessary validation or data processing here
-
-    // Update the state with the submitted form values
-    setFirstName(firstNameValue);
-    setLastName(lastNameValue);
-    setEmail(emailValue);
-    setBirthday(birthdayValue);
-    setPhone(phoneValue);
-    setVatNumber(vatNumberValue);
-  };
+const Profile = () => {
+  const { user } = useContext(AppContext);
 
   return (
-    <div className="container">
-      <h1>Welcome to your Restaurant Client Account</h1>
-      <div className="profile">
-        <h2>Profile Information</h2>
-
-        {/* Display existing account information */}
-        <div className="account-info">
-          <h3>Account Information:</h3>
-          <p>First Name: {firstName}</p>
-          <p>Last Name: {lastName}</p>
-          <p>Email: {email}</p>
-        </div>
-
-        {/* Update additional information */}
-        <div className="update-info">
-          <h3>Update Additional Information:</h3>
-          <form onSubmit={handleFormSubmit}>
-            <label htmlFor="firstName">First Name:</label>
-            <input type="text" id="firstName" name="firstName" required />
-
-            <label htmlFor="lastName">Last Name:</label>
-            <input type="text" id="lastName" name="lastName" required />
-
-            <label htmlFor="email">Email:</label>
-            <input type="email" id="email" name="email" required />
-
-            <label htmlFor="birthday">Birthday:</label>
-            <input type="date" id="birthday" name="birthday" required />
-
-            <label htmlFor="phone">Telephone:</label>
-            <input type="tel" id="phone" name="phone" required />
-
-            <label htmlFor="vatNumber">VAT Number:</label>
-            <input type="text" id="vatNumber" name="vatNumber" required />
-
-            <button type="submit">Update Profile</button>
-          </form>
-        </div>
-
-        {/* Button for booking */}
-        <div className="booking-btn">
-          <a href="/bookings">Make a Booking</a>
+    <div className="profile">
+      <div className="profile-account">
+        <h2 className="profile-account__title">
+          Bem vindo(a) {user?.firstName} {user?.lastName}
+        </h2>
+        <div className="profile-account__actions">
+          <Link to="/profile-info" className="profile-account__button">
+            Informações de conta &nbsp; <i className="fa-solid fa-user"></i>
+          </Link>
+          <Link to="/update-profile" className="profile-account__button">
+            Editar o perfil &nbsp; <i className="fa-solid fa-user-pen"></i>
+          </Link>
+          <Link to="/bookings" className="profile-account__button">
+            Histórico de reservas &nbsp; <i className="fa-solid fa-list-ul"></i>
+          </Link>
+          <Link to="/orders" className="profile-account__button">
+            Histórico de facturas &nbsp; <i className="fa-solid fa-receipt"></i>
+          </Link>
+          <Link to="/bookings" className="profile-account__button">
+            Fazer uma reserva &nbsp; <i className="fa-solid fa-utensils"></i>
+          </Link>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default Profile;

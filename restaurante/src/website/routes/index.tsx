@@ -9,6 +9,8 @@ import Cart from "../pages/Cart";
 import Profile from "../pages/Profile";
 import Bookings from "../pages/Bookings";
 import Menu from "../pages/Menu";
+import UpdateProfile from "../pages/UpdateProfile";
+import ProfileInfo from "../pages/ProfileInfo";
 
 export const router = createBrowserRouter([
   {
@@ -30,6 +32,14 @@ export const router = createBrowserRouter([
       {
         path: "/profile",
         element: <Profile />,
+      },
+      {
+        path: "/update-profile",
+        element: <UpdateProfile />,
+      },
+      {
+        path: "/profile-info",
+        element: <ProfileInfo />,
       },
       {
         path: "/bookings",
