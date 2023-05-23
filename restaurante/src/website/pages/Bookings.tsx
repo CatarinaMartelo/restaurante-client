@@ -1,11 +1,16 @@
-import { useContext, useState, ChangeEvent, FormEvent } from "react";
+import { useContext, useState, ChangeEvent, FormEvent, useEffect } from "react";
 import { AppContext } from "../context/AppContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useApp } from "../hooks/useApp";
 
 function Bookings() {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
+    date: "",
+    time: "",
+    paxNumber: "",
+    observations: "",
   });
 
   const { user } = useContext(AppContext);
@@ -19,17 +24,66 @@ function Bookings() {
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]:
+        name === "paxNumber" ? (value ? parseInt(value, 10) : null) : value,
+    }));
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // Handle form submission logic here
-    console.log(formData);
-  };
+  const { isBooked, attemptBooking } = useApp();
+  const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    isBooked && navigate("/profile");
+  }, [isBooked]);
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError(false);
+    setLoading(true);
+
+    const target = event.target as HTMLFormElement;
+    const firstName = target.elements.namedItem(
+      "firstName"
+    ) as HTMLInputElement;
+    const lastName = target.elements.namedItem("lastName") as HTMLInputElement;
+    const date = target.elements.namedItem("date") as HTMLInputElement;
+    const time = target.elements.namedItem("time") as HTMLInputElement;
+    const paxNumber = parseInt(
+      (target.elements.namedItem("pax-number") as HTMLInputElement).value,
+      10
+    );
+    const observations = target.elements.namedItem(
+      "observations"
+    ) as HTMLInputElement;
+
+    console.log(date.value, paxNumber);
+    attemptBooking({
+      firstName: firstName.value,
+      lastName: lastName.value,
+      date: date.value,
+      time: time.value,
+      paxNumber: paxNumber,
+      observations: observations.value,
+    })
+      .then(() => {
+        navigate("/profile");
+      })
+      .catch((e) => {
+        setError(true);
+        console.log(e);
+      })
+
+      .finally(() => setLoading(false));
+
+    console.log("LOGGING:", firstName.value);
+  }
 
   return (
     <div className="booking-container">
@@ -121,7 +175,6 @@ function Bookings() {
                 id="observations"
                 name="observations"
                 type="text"
-                required
                 className="observations"
               />
             </div>
