@@ -31,6 +31,9 @@ const Navbar = () => {
           <a href="/login">
             <i className="fa-solid fa-user"></i>
           </a>
+          <a href="/backoffice">
+            <i className="fa-solid fa-user-lock"></i>
+          </a>
           <button className="logout-button" onClick={handleLogout}>
             <i className="fa-solid fa-arrow-right-from-bracket"></i>
           </button>

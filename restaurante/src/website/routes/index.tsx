@@ -11,6 +11,7 @@ import Bookings from "../pages/Bookings";
 import Menu from "../pages/Menu";
 import UpdateProfile from "../pages/UpdateProfile";
 import ProfileInfo from "../pages/ProfileInfo";
+import BookingsList from "../pages/BookingsList";
 
 export const router = createBrowserRouter([
   {
@@ -44,6 +45,10 @@ export const router = createBrowserRouter([
       {
         path: "/bookings",
         element: <Bookings />,
+      },
+      {
+        path: "/mybookings",
+        element: <BookingsList />,
       },
       {
         path: "/products",

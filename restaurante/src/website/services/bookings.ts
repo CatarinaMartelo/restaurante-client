@@ -5,16 +5,18 @@ type AuthResponse = {
   token: string;
 };
 
-export type MakeBooking = {
+export type BookingData = {
   firstName: string;
   lastName: string;
   date: string;
-  paxNumber: number;
+  time: string;
+  paxNumber: number | null;
+  observations: string;
 };
 
-export async function book(data: MakeBooking): Promise<AuthResponse> {
+export async function book(data: BookingData): Promise<AuthResponse> {
   return api
-    .post("/auth/bookings", data)
+    .post("/bookings", data)
     .then(({ data }) => data)
     .catch((error) => {
       throw new Error(error.message);
@@ -23,7 +25,7 @@ export async function book(data: MakeBooking): Promise<AuthResponse> {
 
 export async function getBookings(): Promise<User> {
   return api
-    .get("/auth/bookings")
+    .get("/bookings")
     .then(({ data }) => data)
     .catch((error) => {
       throw new Error(error.message);

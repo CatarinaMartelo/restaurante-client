@@ -18,7 +18,7 @@ const Profile = () => {
           <Link to="/update-profile" className="profile-account__button">
             Editar o perfil &nbsp; <i className="fa-solid fa-user-pen"></i>
           </Link>
-          <Link to="/bookings" className="profile-account__button">
+          <Link to="/mybookings" className="profile-account__button">
             Histórico de reservas &nbsp; <i className="fa-solid fa-list-ul"></i>
           </Link>
           <Link to="/orders" className="profile-account__button">

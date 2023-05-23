@@ -12,6 +12,7 @@ export type User = {
   profile: Profile;
   createdAt: string;
   updatedAt: string;
+  bookings: Booking[];
 };
 
 export type Booking = {
@@ -20,6 +21,7 @@ export type Booking = {
   lastName: string;
   date: string;
   time: string;
+  paxNumber: number;
   observations: string;
   createdAt: string;
   updatedAt: string;

@@ -1,6 +1,7 @@
 import { AppAction, AppState } from "../context/AppContext";
 
-export function reducer(state: AppState, { type, payload }: AppAction) {
+export function reducer(state: AppState, action: AppAction) {
+  const { type, payload } = action;
   switch (type) {
     case "LOGIN":
       return { ...state, user: payload, isLoggedIn: true };
@@ -12,7 +13,7 @@ export function reducer(state: AppState, { type, payload }: AppAction) {
     case "CLEAR_CART":
       localStorage.removeItem("cart");
       return { ...state, cart: [] };
-    case "SET_PROFILE_DATA": // New action type
+    case "SET_PROFILE_DATA":
       return {
         ...state,
         user: {
@@ -32,6 +33,20 @@ export function reducer(state: AppState, { type, payload }: AppAction) {
           telephone: payload.telephone,
         },
       };
+    case "ADD_BOOKING":
+      if (state.user) {
+        return {
+          ...state,
+          user: {
+            ...state.user,
+            bookings: [...state.user.bookings, payload],
+          },
+        };
+      }
+      return state;
+    case "SET_BOOKING_LIST":
+      return { ...state, bookingList: payload };
+
     default:
       return state;
   }

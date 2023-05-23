@@ -1,18 +1,26 @@
 import { createContext, ReactNode, useEffect, useReducer } from "react";
 import { reducer } from "../reducer/appReducer";
 import { login, profile, register, RegisterData } from "../services/auth";
-import { Profile, User } from "../models/user";
+import { Booking, Profile, User } from "../models/user";
+import { book, BookingData, getBookings } from "../services/bookings";
 
 export type AppState = {
   user?: User;
+  booking?: Booking;
   profile?: Profile;
   isLoggedIn: boolean;
+  isBooked: boolean;
   email?: string;
   firstName?: string;
   lastName?: string;
   birthday?: string;
   vatNumber?: string;
   telephone?: number;
+  date?: string;
+  time?: string;
+  paxNumber?: number;
+  observations?: string;
+  bookingData: [];
 };
 
 export type AppAction = {
@@ -24,6 +32,8 @@ interface AppContextModel extends AppState {
   dispatch: React.Dispatch<AppAction>;
   attemptLogin: (username: string, password: string) => Promise<void>;
   attemptRegister: (data: RegisterData) => Promise<void>;
+  attemptBooking: (data: BookingData) => Promise<void>;
+  getBookingList: () => Promise<void>;
   logout: () => void;
 }
 
@@ -33,12 +43,17 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
   const initialState: AppState = {
     user: undefined,
     isLoggedIn: false,
+    isBooked: false,
     firstName: undefined,
     lastName: undefined,
     email: undefined,
     birthday: undefined,
     vatNumber: undefined,
     telephone: undefined,
+    date: undefined,
+    time: undefined,
+    paxNumber: undefined,
+    bookingData: [],
   };
 
   const [appState, dispatch] = useReducer(reducer, initialState);
@@ -73,6 +88,22 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     }
   }
 
+  async function attemptBooking(data: BookingData) {
+    console.log(data);
+    const { token } = await book(data);
+    console.log(token);
+    if (token) {
+      dispatch({ type: "ADD_BOOKING", payload: data });
+    }
+    localStorage.setItem("bookingData", JSON.stringify(data));
+  }
+
+  async function getBookingList() {
+    const savedTableData = localStorage.getItem("bookingData");
+    const bookingData = savedTableData ? JSON.parse(savedTableData) : [];
+    dispatch({ type: "SET_BOOKING_LIST", payload: bookingData });
+  }
+
   const logout = () => dispatch({ type: "LOGOUT" });
 
   const value = {
@@ -81,6 +112,8 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     attemptLogin,
     attemptRegister,
     logout,
+    attemptBooking,
+    getBookingList,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

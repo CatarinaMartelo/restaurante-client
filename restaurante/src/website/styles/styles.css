@@ -30,7 +30,7 @@
 .navbar a {
   text-decoration: none;
   color: #ffffff;
-  font-size: 20px;
+  font-size: 26px;
 }
 
 .account-and-logout {
@@ -504,4 +504,97 @@ button:disabled {
   border-radius: 4px;
   font-size: 14px;
   margin-top: 8px;
+}
+
+/* ----- HISTORICO RESERVAS ----- */
+
+.container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #ffffff88;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  text-align: center;
+  color: #333;
+}
+
+.booking-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.booking-table th,
+.booking-table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.booking-table th {
+  background-color: #ffffff88;
+  color: #333;
+}
+
+.booking-table tr:hover {
+  background-color: #f5f5f5;
+}
+
+/* Restaurant theme */
+
+.title {
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 30px;
+}
+
+.booking-table {
+  border: none;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.booking-table th {
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #333;
+  background-color: #f9f9f9;
+}
+
+.booking-table td {
+  color: #333;
+}
+
+.booking-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+/* Restaurant-specific styling */
+
+.title {
+  color: #333;
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+.booking-table {
+  margin-top: 30px;
+}
+
+.booking-table th,
+.booking-table td {
+  padding: 12px;
+}
+
+.booking-table th {
+  color: #777;
+  background-color: #f9f9f9;
+}
+
+.booking-table tr:hover {
+  background-color: #f2f2f2;
 }
