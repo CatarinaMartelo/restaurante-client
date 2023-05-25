@@ -1,7 +1,7 @@
 import Navbar from "../components/Navbar";
-import "../styles/styles.css";
+import "../../website/styles/styles.css";
 
-function Home() {
+function Backoffice() {
   return (
     <div>
       <Navbar />
@@ -12,4 +12,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Backoffice;

@@ -9,9 +9,13 @@ import Cart from "../pages/Cart";
 import Profile from "../pages/Profile";
 import Bookings from "../pages/Bookings";
 import Menu from "../pages/Menu";
+import BackofficeMenu from "../../backoffice/pages/BackofficeMenu";
 import UpdateProfile from "../pages/UpdateProfile";
 import ProfileInfo from "../pages/ProfileInfo";
 import BookingsList from "../pages/BookingsList";
+import Backoffice from "../../backoffice/pages/Backoffice";
+import Utilizadores from "../../backoffice/pages/Utilizadores";
+import AddMenuItem from "../../backoffice/pages/AddMenuItem";
 
 export const router = createBrowserRouter([
   {
@@ -51,8 +55,20 @@ export const router = createBrowserRouter([
         element: <BookingsList />,
       },
       {
-        path: "/products",
+        path: "/menu",
         element: <Menu />,
+      },
+      {
+        path: "/backoffice/menu",
+        element: <BackofficeMenu />,
+      },
+      {
+        path: "/backoffice/menu/add",
+        element: <AddMenuItem />,
+      },
+      {
+        path: "/backoffice/utilizadores",
+        element: <Utilizadores />,
       },
       {
         path: "/orders",
@@ -61,6 +77,10 @@ export const router = createBrowserRouter([
       {
         path: "/cart",
         element: <Cart />,
+      },
+      {
+        path: "/backoffice",
+        element: <Backoffice />,
       },
       {
         path: "*",

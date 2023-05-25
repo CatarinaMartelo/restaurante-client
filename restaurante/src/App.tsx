@@ -4,7 +4,6 @@ import Navbar from "./website/components/Navbar";
 function App() {
   return (
     <div>
-      <Navbar />
       <Outlet />
     </div>
   );

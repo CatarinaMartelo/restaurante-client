@@ -1,4 +1,4 @@
-import { AppAction, AppState } from "../context/AppContext";
+import { AppAction, AppState } from "../../common/context/AppContext";
 
 export function reducer(state: AppState, action: AppAction) {
   const { type, payload } = action;
@@ -46,6 +46,17 @@ export function reducer(state: AppState, action: AppAction) {
       return state;
     case "SET_BOOKING_LIST":
       return { ...state, bookingList: payload };
+    case "ADD_ITEM":
+      return { ...state, menuItems: [...state.menuItems, payload] };
+
+    case "SET_MENU_ITEMS":
+      console.log("New menuItem state:", action.payload);
+      return {
+        ...state,
+        menuItem: action.payload, // Update the menuItem state with the fetched menu items
+      };
+    case "FETCH_CATEGORY":
+      return { ...state, category: payload };
 
     default:
       return state;

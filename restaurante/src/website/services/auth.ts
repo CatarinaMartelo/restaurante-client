@@ -42,3 +42,12 @@ export async function profile(): Promise<User> {
       throw new Error(error.message);
     });
 }
+
+export async function updateProfile(): Promise<User> {
+  return api
+    .post("/auth/profile")
+    .then(({ data }) => data)
+    .catch((error) => {
+      throw new Error(error.message);
+    });
+}

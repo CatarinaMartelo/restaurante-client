@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AppContext } from "../context/AppContext";
+import { AppContext } from "../../common/context/AppContext";
+import Navbar from "../components/Navbar";
 
 const UpdateProfile = () => {
   const { dispatch } = useContext(AppContext);
@@ -50,52 +51,55 @@ const UpdateProfile = () => {
   };
 
   return (
-    <div className="profile">
-      <h2>Editar Perfil</h2>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="birthday">Data de nascimento</label>
-        <input
-          type="date"
-          id="birthday"
-          name="birthday"
-          className="birthday"
-          value={formData.birthday}
-          onChange={handleChange}
-        />
+    <div>
+      <Navbar />
+      <div className="profile">
+        <h2>Editar Perfil</h2>
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="birthday">Data de nascimento</label>
+          <input
+            type="date"
+            id="birthday"
+            name="birthday"
+            className="birthday"
+            value={formData.birthday}
+            onChange={handleChange}
+          />
 
-        <label htmlFor="vatNumber">Número de contribuinte</label>
-        <input
-          type="text"
-          id="vatNumber"
-          name="vatNumber"
-          className="vat-number"
-          value={formData.vatNumber}
-          onChange={handleChange}
-        />
+          <label htmlFor="vatNumber">Número de contribuinte</label>
+          <input
+            type="text"
+            id="vatNumber"
+            name="vatNumber"
+            className="vat-number"
+            value={formData.vatNumber}
+            onChange={handleChange}
+          />
 
-        <label htmlFor="telephone">Contacto telefónico</label>
-        <input
-          type="text"
-          id="telephone"
-          name="telephone"
-          className="telephone"
-          value={formData.telephone}
-          onChange={handleChange}
-          onInput={handleNumericInput}
-          title="only numbers"
-        />
+          <label htmlFor="telephone">Contacto telefónico</label>
+          <input
+            type="text"
+            id="telephone"
+            name="telephone"
+            className="telephone"
+            value={formData.telephone}
+            onChange={handleChange}
+            onInput={handleNumericInput}
+            title="only numbers"
+          />
 
-        {showTelephoneWarning && (
-          <p id="telephone-error" className="error-message">
-            Apenas caracteres numéricos
-          </p>
-        )}
+          {showTelephoneWarning && (
+            <p id="telephone-error" className="error-message">
+              Apenas caracteres numéricos
+            </p>
+          )}
 
-        <button type="submit">Atualizar Perfil</button>
-        <Link to="/profile" className="profile-account__button">
-          Voltar ao perfil inicial
-        </Link>
-      </form>
+          <button type="submit">Atualizar Perfil</button>
+          <Link to="/profile" className="profile-account__button">
+            Voltar ao perfil inicial
+          </Link>
+        </form>
+      </div>
     </div>
   );
 };

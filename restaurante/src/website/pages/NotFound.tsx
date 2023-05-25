@@ -1,7 +1,12 @@
+import Navbar from "../components/Navbar";
+
 function NotFound() {
   return (
     <div>
-      <h1>404 - Page not found!</h1>
+      <Navbar />
+      <div>
+        <h1>404 - Page not found!</h1>
+      </div>
     </div>
   );
 }

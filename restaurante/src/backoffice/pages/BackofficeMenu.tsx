@@ -1,14 +1,18 @@
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Navbar from "../components/Navbar";
-
-import { getMenuItemsByCategory } from "../../website/services/menuItems";
+import axios from "axios";
+import {
+  fetchMenuItems,
+  getMenuItemsByCategory,
+} from "../../website/services/menuItems";
+import { AppContext } from "../../common/context/AppContext";
 
 interface MenuItem {
-  productCategory: string;
   name: string;
-  description: string;
   price: string;
+  description: string;
+  productCategory: string;
 }
 
 function Menu() {
@@ -31,6 +35,10 @@ function Menu() {
     fetchProducts();
   }, [selectedCategory]);
 
+  const isSelected = (category: string) => {
+    return selectedCategory === category;
+  };
+
   return (
     <div>
       <Navbar />
@@ -49,6 +57,7 @@ function Menu() {
             </button>
           ))}
         </div>
+
         <div className="scrollable-container">
           <table>
             <thead>
@@ -56,7 +65,6 @@ function Menu() {
                 <th>Nome</th>
                 <th>Descrição</th>
                 <th>Preço</th>
-                <th>Remover Item</th>
               </tr>
             </thead>
             <tbody>
@@ -66,9 +74,6 @@ function Menu() {
                     <td>{item.name}</td>
                     <td>{item.description}</td>
                     <td>{item.price}</td>
-                    <td>
-                      <i className="fa-solid fa-trash-can"></i>
-                    </td>
                   </tr>
                 ))
               ) : (
@@ -80,8 +85,11 @@ function Menu() {
           </table>
         </div>
         <div className="buttons-container">
-          <Link to="/profile" className="menu__button">
-            Voltar ao perfil
+          <Link to="/backoffice/menu/add" className="menu__button">
+            Adicionar item
+          </Link>
+          <Link to="/backoffice/menu" className="menu__button">
+            Voltar ao menu
           </Link>
         </div>
       </div>

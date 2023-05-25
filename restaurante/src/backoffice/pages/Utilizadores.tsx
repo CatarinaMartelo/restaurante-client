@@ -1,6 +1,6 @@
 import Navbar from "../components/Navbar";
 
-function Orders() {
+function Utilizadores() {
   return (
     <div>
       <Navbar />
@@ -8,4 +8,4 @@ function Orders() {
   );
 }
 
-export default Orders;
+export default Utilizadores;

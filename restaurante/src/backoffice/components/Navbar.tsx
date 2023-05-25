@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import "../styles/styles.css";
+import "../../backoffice/styles/styles.css";
 import { AppContext } from "../../common/context/AppContext";
 import { useNavigate } from "react-router-dom";
 
@@ -16,16 +16,13 @@ const Navbar = () => {
     <nav className="navbar">
       <ul className="navbar-ul">
         <li>
-          <a href="/">Home</a>
+          <a href="/backoffice">Home</a>
         </li>
         <li>
-          <a href="/menu">Menu</a>
+          <a href="/backoffice/menu">Menu</a>
         </li>
         <li>
-          <a href="/orders">Entregas</a>
-        </li>
-        <li>
-          <a href="/contacts">Contactos</a>
+          <a href="/backoffice/utilizadores">Utilizadores</a>
         </li>
         <li className="account-and-logout">
           <a href="/login">

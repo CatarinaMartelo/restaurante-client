@@ -1,11 +1,25 @@
 import { createContext, ReactNode, useEffect, useReducer } from "react";
-import { reducer } from "../reducer/appReducer";
-import { login, profile, register, RegisterData } from "../services/auth";
-import { Booking, Profile, User } from "../models/user";
-import { book, BookingData, getBookings } from "../services/bookings";
+import { reducer } from "../../website/reducer/appReducer";
+import {
+  login,
+  profile,
+  register,
+  RegisterData,
+} from "../../website/services/auth";
+import { Booking, Profile, User } from "../../website/models/user";
+import { book, BookingData } from "../../website/services/bookings";
+import {
+  addItem,
+  AuthResponse,
+  Category,
+  fetchMenuItems,
+  getMenuItemsByCategory,
+  MenuItem,
+} from "../../website/services/menuItems";
 
 export type AppState = {
   user?: User;
+  MenuItem?: MenuItem;
   booking?: Booking;
   profile?: Profile;
   isLoggedIn: boolean;
@@ -21,11 +35,34 @@ export type AppState = {
   paxNumber?: number;
   observations?: string;
   bookingData: [];
+  name?: string;
+  price?: string;
+  description?: string;
+  productCategoryId?: string;
+  isItemAdded: boolean;
+  menuItem: [];
+  category?: Category;
+  menuItems: MenuItem[];
 };
 
 export type AppAction = {
   type: string;
   payload?: any;
+};
+
+export type AddItemAction = {
+  type: "ADD_ITEM";
+  payload: MenuItem;
+};
+
+export type getCategoryAction = {
+  type: "FETCH_CATEGORY";
+  payload: Category;
+};
+
+export type setMenuItems = {
+  type: "SET_NEW_ITEM";
+  payload: MenuItem;
 };
 
 interface AppContextModel extends AppState {
@@ -34,6 +71,11 @@ interface AppContextModel extends AppState {
   attemptRegister: (data: RegisterData) => Promise<void>;
   attemptBooking: (data: BookingData) => Promise<void>;
   getBookingList: () => Promise<void>;
+  attemptAddingItem: (data: MenuItem) => Promise<void>;
+  fetchMenuItemsByCategory: (
+    productCategoryId: string,
+    authResponse: AuthResponse
+  ) => Promise<void>;
   logout: () => void;
 }
 
@@ -54,6 +96,14 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     time: undefined,
     paxNumber: undefined,
     bookingData: [],
+    name: undefined,
+    price: undefined,
+    description: undefined,
+    isItemAdded: false,
+    menuItem: [],
+    productCategoryId: undefined,
+    category: undefined,
+    menuItems: [],
   };
 
   const [appState, dispatch] = useReducer(reducer, initialState);
@@ -104,6 +154,33 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     dispatch({ type: "SET_BOOKING_LIST", payload: bookingData });
   }
 
+  async function attemptAddingItem(data: MenuItem) {
+    console.log("MY DATA:", data);
+    const { token } = await addItem(data);
+    console.log("MY TOKEN:", token);
+    if (token) {
+      dispatch({ type: "ADD_ITEM", payload: data });
+    }
+    localStorage.setItem("itemData", JSON.stringify(data));
+    dispatch({ type: "SET_NEW_MENU_ITEM", payload: data });
+  }
+
+  async function fetchMenuItemsByCategory(
+    productCategoryId: string,
+    authResponse: AuthResponse
+  ) {
+    try {
+      const { token } = authResponse;
+      console.log("fetch function started");
+      const response = await getMenuItemsByCategory(productCategoryId, token);
+      console.log("RESPONSE LOG:", response);
+      dispatch({ type: "SET_MENU_ITEMS", payload: response });
+      console.log("RESPONSE 2 LOG:", response);
+    } catch (error: any) {
+      console.log("Error fetching menu itemssss:", error.message);
+    }
+  }
+
   const logout = () => dispatch({ type: "LOGOUT" });
 
   const value = {
@@ -114,6 +191,8 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     logout,
     attemptBooking,
     getBookingList,
+    attemptAddingItem,
+    fetchMenuItemsByCategory,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
