@@ -35,6 +35,7 @@ function Register() {
       password: password.value,
       firstName: firstName.value,
       lastName: lastName.value,
+      roleName: "Client",
     })
       .then(() => {
         navigate("/profile");

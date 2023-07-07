@@ -1,11 +1,34 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import Loader from "../../common/components/Loader";
 import { useApp } from "../../common/hooks/useApp";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import { AppContext } from "../../common/context/AppContext";
+import { findByEmail, getUsers } from "../../common/services/auth";
+import { getRoleNameThroughId } from "../../common/services/role";
 
 function Login() {
+  const { user, setUser } = useContext(AppContext);
+
+  const [roleName, setRoleName] = useState("");
+
+  const roleId = user?.roleId;
+
+  if (roleId) {
+    const fetchRoleName = async () => {
+      try {
+        const role = await getRoleNameThroughId(roleId);
+        console.log(role);
+        setRoleName(role.name);
+      } catch (error) {
+        console.log("Error fetching role name:", error);
+      }
+    };
+
+    fetchRoleName();
+  }
+
   const { isLoggedIn, attemptLogin } = useApp();
   const navigate = useNavigate();
 
@@ -16,7 +39,7 @@ function Login() {
     isLoggedIn && navigate("/profile");
   }, [isLoggedIn]);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(false);
     setLoading(true);
@@ -25,18 +48,51 @@ function Login() {
     const email = target.elements.namedItem("email") as HTMLInputElement;
     const password = target.elements.namedItem("password") as HTMLInputElement;
 
-    attemptLogin(email.value, password.value)
-      .then(() => {
-        navigate("/profile");
-      })
-      .catch((e) => {
+    const users = await getUsers();
+    const userWithEmail = users.find((user) => user.email === email.value);
+
+    console.log(userWithEmail);
+
+    if (userWithEmail) {
+      const role = await getRoleNameThroughId(userWithEmail.roleId);
+      const roleName = role.name;
+
+      if (userWithEmail && roleName === "Client") {
+        attemptLogin(email.value, password.value)
+          .then(() => {
+            // Retrieve the user details including roleName
+            findByEmail(email.value)
+              .then((userDetails) => {
+                const loggedInUser = {
+                  ...user,
+                  ...userDetails,
+                  email: email.value,
+                };
+                if (setUser) setUser(loggedInUser);
+                console.log("user", loggedInUser);
+                localStorage.setItem("user", JSON.stringify(loggedInUser));
+                navigate("/profile");
+              })
+              .catch((error) => {
+                setError(true);
+                console.log(error);
+              })
+              .finally(() => setLoading(false));
+          })
+          .catch((e: any) => {
+            setError(true);
+            console.log(e);
+            setLoading(false);
+          });
+      } else {
         setError(true);
-        console.log(e);
-      })
-      .finally(() => setLoading(false));
+        setLoading(false);
+      }
+    }
   }
+
   return (
-    <div>
+    <div className="login-page">
       <Navbar />
       <div className="login-container">
         <div className="login-box">

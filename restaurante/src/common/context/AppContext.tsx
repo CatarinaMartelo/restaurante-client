@@ -1,13 +1,15 @@
-import { createContext, ReactNode, useEffect, useReducer } from "react";
-import { reducer } from "../../website/reducer/appReducer";
 import {
-  login,
-  profile,
-  register,
-  RegisterData,
-} from "../../website/services/auth";
-import { Booking, Profile, User } from "../../website/models/user";
-import { book, BookingData } from "../../website/services/bookings";
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
+import { reducer } from "../reducer/appReducer";
+import { login, profile, register, RegisterData } from "../services/auth";
+import { Booking, Profile, User } from "../models/user";
+import { book, BookingData, updateBooking } from "../services/bookings";
 import {
   addItem,
   AuthResponse,
@@ -15,18 +17,25 @@ import {
   fetchMenuItems,
   getMenuItemsByCategory,
   MenuItem,
-} from "../../website/services/menuItems";
+} from "../services/menuItems";
+import { Role } from "../models/role";
+import { getRoleNameThroughId } from "../services/role";
+import { addTable, getTables, TableData } from "../services/tables";
 
 export type AppState = {
   user?: User;
+  role?: Role;
   MenuItem?: MenuItem;
   booking?: Booking;
   profile?: Profile;
   isLoggedIn: boolean;
+  isAdminLoggedIn: boolean;
   isBooked: boolean;
   email?: string;
   firstName?: string;
   lastName?: string;
+  roleId?: string;
+  roleName?: string;
   birthday?: string;
   vatNumber?: string;
   telephone?: number;
@@ -43,6 +52,12 @@ export type AppState = {
   menuItem: [];
   category?: Category;
   menuItems: MenuItem[];
+  tables: TableData[];
+  id?: string;
+  table?: number;
+  setUser?: React.Dispatch<React.SetStateAction<User>>;
+  bookingList: Booking[];
+  loading: boolean;
 };
 
 export type AppAction = {
@@ -69,6 +84,7 @@ interface AppContextModel extends AppState {
   dispatch: React.Dispatch<AppAction>;
   attemptLogin: (username: string, password: string) => Promise<void>;
   attemptRegister: (data: RegisterData) => Promise<void>;
+  attemptEmployeeRegister: (data: RegisterData) => Promise<void>;
   attemptBooking: (data: BookingData) => Promise<void>;
   getBookingList: () => Promise<void>;
   attemptAddingItem: (data: MenuItem) => Promise<void>;
@@ -76,18 +92,28 @@ interface AppContextModel extends AppState {
     productCategoryId: string,
     authResponse: AuthResponse
   ) => Promise<void>;
+  getRoleName: (roleId: string) => Promise<Role | null>;
+  attemptAddingTable: (data: TableData) => Promise<TableData>;
+  updateBookings: (id: string, data: BookingData) => Promise<void>;
+  getTableRecords: () => Promise<TableData[]>;
   logout: () => void;
 }
 
 export const AppContext = createContext({} as AppContextModel);
 
 const AppProvider = ({ children }: { children: ReactNode }) => {
+  const { user, setUser } = useContext(AppContext);
   const initialState: AppState = {
-    user: undefined,
+    user,
+    setUser,
+    role: undefined,
     isLoggedIn: false,
+    isAdminLoggedIn: false,
     isBooked: false,
     firstName: undefined,
     lastName: undefined,
+    roleId: undefined,
+    roleName: undefined,
     email: undefined,
     birthday: undefined,
     vatNumber: undefined,
@@ -104,6 +130,11 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     productCategoryId: undefined,
     category: undefined,
     menuItems: [],
+    tables: [],
+    id: undefined,
+    table: undefined,
+    bookingList: [],
+    loading: false,
   };
 
   const [appState, dispatch] = useReducer(reducer, initialState);
@@ -138,6 +169,22 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     }
   }
 
+  async function attemptEmployeeRegister(data: RegisterData) {
+    console.log(data);
+    const { token } = await register(data);
+    console.log(token);
+    if (token) {
+      localStorage.setItem("token", token);
+    }
+  }
+
+  async function getRoleName(roleId: string) {
+    console.log(roleId);
+
+    const roleName = await getRoleNameThroughId(roleId);
+    return roleName;
+  }
+
   async function attemptBooking(data: BookingData) {
     console.log(data);
     const { token } = await book(data);
@@ -165,19 +212,59 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     dispatch({ type: "SET_NEW_MENU_ITEM", payload: data });
   }
 
-  async function fetchMenuItemsByCategory(
-    productCategoryId: string,
-    authResponse: AuthResponse
-  ) {
+  async function fetchMenuItemsByCategory(productCategoryId: string) {
     try {
-      const { token } = authResponse;
       console.log("fetch function started");
-      const response = await getMenuItemsByCategory(productCategoryId, token);
+      const response = await getMenuItemsByCategory(productCategoryId);
       console.log("RESPONSE LOG:", response);
       dispatch({ type: "SET_MENU_ITEMS", payload: response });
       console.log("RESPONSE 2 LOG:", response);
     } catch (error: any) {
       console.log("Error fetching menu itemssss:", error.message);
+    }
+  }
+
+  async function attemptAddingTable(data: TableData) {
+    try {
+      console.log("MY DATA:", data);
+      const tableRecord = await addTable(data);
+      console.log("Table Record:", tableRecord);
+      dispatch({ type: "CREATE_TABLE", payload: tableRecord });
+      localStorage.setItem("tableData", JSON.stringify(data));
+
+      return tableRecord; // Return the table record
+    } catch (error) {
+      console.log("Error adding table:", error);
+      throw error; // Rethrow the error to handle it in the component
+    }
+  }
+
+  async function updateBookings(id: string, data: BookingData) {
+    console.log("MY DATA:", data);
+    try {
+      await updateBooking(id, data);
+      console.log("Update successful");
+      dispatch({ type: "UPDATE_BOOKING", payload: data });
+      localStorage.setItem("updatedBookingData", JSON.stringify(data));
+      return; // Add a return statement here
+    } catch (error) {
+      console.error("Update failed:", error);
+      throw error; // Optionally, rethrow the error to handle it in the component
+    }
+  }
+
+  async function getTableRecords(): Promise<TableData[]> {
+    try {
+      const response = await getTables();
+      const tableRecords = response; // Access the table records directly from the response
+      console.log("Table records:", tableRecords);
+      dispatch({ type: "FETCH_TABLES", payload: tableRecords });
+
+      localStorage.setItem("tableRecords", JSON.stringify(tableRecords));
+      return tableRecords; // Return the table records
+    } catch (error: any) {
+      console.log("Error fetching tables:", error.message);
+      throw error; // Throw the error to be caught by the caller
     }
   }
 
@@ -188,11 +275,16 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     dispatch,
     attemptLogin,
     attemptRegister,
+    attemptEmployeeRegister,
     logout,
     attemptBooking,
     getBookingList,
     attemptAddingItem,
     fetchMenuItemsByCategory,
+    getRoleName,
+    attemptAddingTable,
+    updateBookings,
+    getTableRecords,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
