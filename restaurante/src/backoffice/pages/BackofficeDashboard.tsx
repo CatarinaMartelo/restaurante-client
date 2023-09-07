@@ -41,7 +41,7 @@ const BackofficeDashboard = () => {
             </h2>
             <div className="profile-account__actions">
               <Link
-                to="/backoffice/register"
+                to="/backoffice/create-user"
                 className="profile-account__button"
               >
                 Criar colaborador &nbsp;{" "}
