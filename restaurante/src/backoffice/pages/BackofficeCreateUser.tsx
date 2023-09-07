@@ -83,130 +83,115 @@ function BackofficeCreateUser() {
   return (
     <div>
       <Navbar />
-      {roleName === "Admin" ? (
-        <div className="login-container">
-          <div className="login-box">
-            <div className="sign-in">
-              <h2 className="sign-in-text">
-                Crie uma conta para o seu colaborador
-              </h2>
-            </div>
 
-            <div className="form-container">
-              <form className="login-form" onSubmit={handleSubmit}>
-                <div>
-                  <label htmlFor="firstName" className="form-label">
-                    Nome
-                  </label>
+      <div className="login-container">
+        <div className="login-box">
+          <div className="sign-in">
+            <h2 className="sign-in-text">
+              Crie uma conta para o seu colaborador
+            </h2>
+          </div>
+
+          <div className="form-container">
+            <form className="login-form" onSubmit={handleSubmit}>
+              <div>
+                <label htmlFor="firstName" className="form-label">
+                  Nome
+                </label>
+                <input
+                  id="firstName"
+                  name="firstName"
+                  type="text"
+                  autoComplete="off"
+                  required
+                  className="firstName"
+                  disabled={loading}
+                />
+                <label htmlFor="lastName" className="form-label">
+                  Apelido
+                </label>
+                <input
+                  id="lastName"
+                  name="lastName"
+                  type="text"
+                  autoComplete="off"
+                  required
+                  className="lastName"
+                  disabled={loading}
+                />
+                <label htmlFor="email" className="form-label">
+                  Email
+                </label>
+                <div className="input-container">
                   <input
-                    id="firstName"
-                    name="firstName"
-                    type="text"
-                    autoComplete="off"
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
                     required
-                    className="firstName"
+                    className="email"
                     disabled={loading}
                   />
-                  <label htmlFor="lastName" className="form-label">
-                    Apelido
+                </div>
+                <label htmlFor="role" className="form-label">
+                  Categoria
+                </label>
+                <select
+                  id="role"
+                  name="role"
+                  onChange={(event) =>
+                    setSelectedRole(event.target.value as RoleName)
+                  }
+                  required
+                  className="role"
+                >
+                  <option value="">Seleccione uma categoria</option>
+
+                  <option value="Sala">Sala</option>
+                  <option value="Cozinha">Cozinha</option>
+                </select>
+              </div>
+              <div>
+                <div className="flex items-center justify-between">
+                  <label htmlFor="password" className="form-label">
+                    Palavra-passe
                   </label>
+                </div>
+                <div className="input-container">
                   <input
-                    id="lastName"
-                    name="lastName"
-                    type="text"
-                    autoComplete="off"
+                    id="password"
+                    name="password"
+                    type="password"
+                    autoComplete="current-password"
+                    minLength={4}
+                    maxLength={20}
                     required
-                    className="lastName"
+                    className="password"
                     disabled={loading}
                   />
-                  <label htmlFor="email" className="form-label">
-                    Email
-                  </label>
-                  <div className="input-container">
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      autoComplete="email"
-                      required
-                      className="email"
-                      disabled={loading}
-                    />
-                  </div>
-                  <label htmlFor="role" className="form-label">
-                    Categoria
-                  </label>
-                  <select
-                    id="role"
-                    name="role"
-                    onChange={(event) =>
-                      setSelectedRole(event.target.value as RoleName)
-                    }
-                    required
-                    className="role"
-                  >
-                    <option value="">Seleccione uma categoria</option>
-
-                    <option value="Sala">Sala</option>
-                    <option value="Cozinha">Cozinha</option>
-                  </select>
                 </div>
-                <div>
-                  <div className="flex items-center justify-between">
-                    <label htmlFor="password" className="form-label">
-                      Palavra-passe
-                    </label>
-                  </div>
-                  <div className="input-container">
-                    <input
-                      id="password"
-                      name="password"
-                      type="password"
-                      autoComplete="current-password"
-                      minLength={4}
-                      maxLength={20}
-                      required
-                      className="password"
-                      disabled={loading}
-                    />
-                  </div>
-                </div>
-                <div className="submit-button-box">
-                  <button type="submit" className="submit-button">
-                    Registar {loading && <Loader />}
-                  </button>
-                  <Link
-                    to="/backoffice/dashboard"
-                    className="menu__button-create-user"
-                  >
-                    Voltar ao painel
-                  </Link>
-                </div>
-              </form>
-              <p className="register-link">
-                Já tem uma conta?{" "}
-                <Link to="/login" className="login-link-text">
-                  Faça login
+              </div>
+              <div className="submit-button-box">
+                <button type="submit" className="submit-button">
+                  Registar {loading && <Loader />}
+                </button>
+                <Link
+                  to="/backoffice/dashboard"
+                  className="menu__button-create-user"
+                >
+                  Voltar ao painel
                 </Link>
-              </p>
-            </div>
+              </div>
+            </form>
+            <p className="register-link">
+              Já tem uma conta?{" "}
+              <Link to="/login" className="login-link-text">
+                Faça login
+              </Link>
+            </p>
           </div>
         </div>
-      ) : (
-        <div className="non-authorized">
-          <p>Ups. Não tem acesso a esta página.</p>
-          <i className="fa-solid fa-hand"></i>
-          <p>Deverá fazer login com a sua conta de Admnistrador</p>
-
-          <Link
-            to="/backoffice/login"
-            className="login-button"
-            onClick={logOut}
-          >
-            Login
-          </Link>
-        </div>
-      )}
+      </div>
     </div>
   );
 }
