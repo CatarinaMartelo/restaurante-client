@@ -19,10 +19,6 @@ function BackofficeCreateUser() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
-  useEffect(() => {
-    isLoggedIn && navigate("/backoffice/register");
-  }, [isLoggedIn]);
-
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(false);
