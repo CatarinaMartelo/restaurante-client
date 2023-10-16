@@ -105,6 +105,7 @@
 }
 
 /* ----- HOME ----- */
+
 body {
   background-image: url("../assets/fundoo.jpg");
   background-size: cover;
@@ -340,7 +341,7 @@ a:hover {
   background-position: center center;
 } */
 
-/* ----- BOOKINGS ----- print*/
+/* ----- BOOKINGS ----- */
 
 .booking-container {
   background-color: #ffffff88;
@@ -422,8 +423,6 @@ a:hover {
 } */
 
 /* ----- MENU ----- */
-
-/* Add this CSS code to your stylesheets or style tags */
 
 .category-buttons {
   display: flex;
@@ -964,13 +963,11 @@ button:disabled {
 .start-container {
   display: flex;
   justify-content: space-evenly;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   height: 100vh;
   width: 100vw;
+  overflow: hidden;
 }
+
 .website-container,
 .waiters-container,
 .backoffice-container,
@@ -984,6 +981,51 @@ button:disabled {
   margin: 2.5px;
   align-items: center;
   justify-content: center;
+}
+
+@media (max-width: 790px) {
+  .start-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    height: 100vh;
+  }
+
+  .website-container,
+  .waiters-container,
+  .backoffice-container,
+  .kitchen-container {
+    height: 49vh;
+  }
+
+  .website-container {
+    grid-row: 1;
+    grid-column: 1;
+  }
+
+  .waiters-container {
+    grid-row: 1;
+    grid-column: 2;
+  }
+
+  .backoffice-container {
+    grid-row: 2;
+    grid-column: 1;
+  }
+
+  .kitchen-container {
+    grid-row: 2;
+    grid-column: 2;
+  }
+}
+
+@media (max-width: 375px) {
+  .website-container,
+  .waiters-container,
+  .backoffice-container,
+  .kitchen-container {
+    width: 48vw;
+  }
 }
 
 .website-container:hover,

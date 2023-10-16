@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = "https://restaurante-server.vercel.app/";
+const baseURL = "https://restaurante-server.vercel.app";
 
 export const api = axios.create({
   baseURL,
